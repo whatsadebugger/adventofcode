@@ -22,6 +22,7 @@ func main() {
 
 	fab := fabric(1000, 1000)
 	scanner := bufio.NewScanner(f)
+	claims := make([]claim, 0)
 
 	for scanner.Scan() {
 		line := scanner.Text()
@@ -38,8 +39,10 @@ func main() {
 		)
 
 		markClaim(fab, clm)
+		claims = append(claims, clm)
 	}
 	fmt.Println(overlapped(fab))
+	fmt.Println(validateClaims(fab, claims))
 }
 
 func fabric(x, y int) [][]int {
@@ -69,4 +72,21 @@ func markClaim(fab [][]int, clm claim) {
 			fab[i][j]++
 		}
 	}
+}
+
+func validateClaims(fab [][]int, claims []claim) int {
+	for _, claim := range claims {
+		validClaim := true
+		for i := claim.leftMargin; i < claim.leftMargin+claim.cols; i++ {
+			for j := claim.topMargin; j < claim.topMargin+claim.rows; j++ {
+				if fab[i][j] > 1 {
+					validClaim = false
+				}
+			}
+		}
+		if validClaim {
+			return claim.claimID
+		}
+	}
+	return -1
 }
