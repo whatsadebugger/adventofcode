@@ -37,11 +37,9 @@ func main() {
 			&clm.rows,
 		)
 
-		// mark claims in a way that we can detect overlaps?
 		markClaim(fab, clm)
-		// find overlaps
-
 	}
+	fmt.Println(overlapped(fab))
 }
 
 func fabric(x, y int) [][]int {
@@ -53,6 +51,22 @@ func fabric(x, y int) [][]int {
 	return fab
 }
 
-func markClaim(fab [][]int, clm claim) {
+func overlapped(fab [][]int) int {
+	overlapped := 0
+	for _, row := range fab {
+		for j := range row {
+			if row[j] > 1 {
+				overlapped++
+			}
+		}
+	}
+	return overlapped
+}
 
+func markClaim(fab [][]int, clm claim) {
+	for i := clm.leftMargin; i < clm.leftMargin+clm.cols; i++ {
+		for j := clm.topMargin; j < clm.topMargin+clm.rows; j++ {
+			fab[i][j]++
+		}
+	}
 }
